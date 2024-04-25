@@ -5,7 +5,7 @@ public struct CompletionsOptionalParameters {
     public let suffix: String?
     public let maxTokens: Int?
     public let temperature: Double?
-    public let topP: Int?
+    public let topP: Double?
     public let n: Int?
     public let logprobs: Int?
     public let echo: Bool?
@@ -19,7 +19,7 @@ public struct CompletionsOptionalParameters {
                 suffix: String = "",
                 maxTokens: Int? = 16,
                 temperature: Double? = 1.0,
-                topP: Int? = 1,
+                topP: Double? = 1.0,
                 n: Int? = 1,
                 logprobs: Int? = nil,
                 echo: Bool? = false,

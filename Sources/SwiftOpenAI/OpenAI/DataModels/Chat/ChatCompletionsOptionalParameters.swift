@@ -2,7 +2,7 @@ import Foundation
 
 public struct ChatCompletionsOptionalParameters {
     public let temperature: Double?
-    public let topP: Int?
+    public let topP: Double?
     public let n: Int?
     public let stop: [String]?
     public let stream: Bool
@@ -10,7 +10,7 @@ public struct ChatCompletionsOptionalParameters {
     public let user: String?
 
     public init(temperature: Double = 1.0,
-                topP: Int = 1,
+                topP: Double = 1.0,
                 n: Int = 1,
                 stop: [String]? = nil,
                 stream: Bool = false,
