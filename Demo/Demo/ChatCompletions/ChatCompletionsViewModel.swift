@@ -20,7 +20,7 @@ final class ChatCompletionsViewModel {
         
         let optionalParameters = ChatCompletionsOptionalParameters(temperature: 0.5,
                                                                    stream: isStream,
-                                                                   maxTokens: 100)
+                                                                   maxTokens: 2000)
         if isStream {
             do {
                 for try await newMessage in try await openAI.createChatCompletionsStream(model: .gpt4(.base),
