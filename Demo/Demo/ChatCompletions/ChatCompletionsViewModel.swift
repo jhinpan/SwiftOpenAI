@@ -23,7 +23,7 @@ final class ChatCompletionsViewModel {
                                                                    maxTokens: 2000)
         if isStream {
             do {
-                for try await newMessage in try await openAI.createChatCompletionsStream(model: .gpt4(.base),
+                for try await newMessage in try await openAI.createChatCompletionsStream(model: .gpt4o(.base),
                                                                                          messages: messages,
                                                                                          optionalParameters: optionalParameters) {
                     onReceiveStream(newMessage: newMessage)

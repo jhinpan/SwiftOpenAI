@@ -233,7 +233,7 @@ let optionalParameters = ChatCompletionsOptionalParameters(
 do {
     // Create a chat completion stream using the OpenAI API.
     let stream = try await openAI.createChatCompletionsStream(
-        model: .gpt4(.base), // Specify the model, here GPT-4 base model.
+        model: .gpt4o(.base), // Specify the model, here GPT-4 base model.
         messages: messages, // Provide the conversation messages.
         optionalParameters: optionalParameters // Include the optional parameters.
     )
