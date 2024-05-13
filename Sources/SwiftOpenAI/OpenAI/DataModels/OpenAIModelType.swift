@@ -1,12 +1,15 @@
 import Foundation
 
 public enum OpenAIModelType {
+    case gpt4o(GPT4o)
     case gpt4(GPT4)
     case gpt3_5(GPT3_5)
     case embedding(EmbeddingModel)
 
     var name: String {
         switch self {
+        case .gpt4o(let gpt4oModel):
+            return gpt4oModel.rawValue
         case .gpt4(let gpt4Model):
             return gpt4Model.rawValue
         case .gpt3_5(let gpt3_5Model):
@@ -26,6 +29,11 @@ public enum OpenAIImageModelType {
             return model.rawValue
         }
     }
+}
+
+public enum GPT4o: String {
+    case base = "gpt-4o"
+    case gpt_4o_2024_05_13 = "gpt-4o-2024-05-13"
 }
 
 public enum GPT4: String {
