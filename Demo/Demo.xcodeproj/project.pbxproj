@@ -28,6 +28,8 @@
 		F442DD2F2B8114450032682E /* CreateTranscriptViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD2E2B8114450032682E /* CreateTranscriptViewModel.swift */; };
 		F442DD322B8119900032682E /* VisionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD312B8119900032682E /* VisionView.swift */; };
 		F442DD342B8119A20032682E /* VisionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD332B8119A20032682E /* VisionViewModel.swift */; };
+		F44D5A1D2BF55D5D007B2D3F /* CreateTranslationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44D5A1C2BF55D5D007B2D3F /* CreateTranslationView.swift */; };
+		F44D5A1F2BF55D7D007B2D3F /* CreateTranslationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44D5A1E2BF55D7D007B2D3F /* CreateTranslationViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,8 @@
 		F442DD2E2B8114450032682E /* CreateTranscriptViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTranscriptViewModel.swift; sourceTree = "<group>"; };
 		F442DD312B8119900032682E /* VisionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionView.swift; sourceTree = "<group>"; };
 		F442DD332B8119A20032682E /* VisionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionViewModel.swift; sourceTree = "<group>"; };
+		F44D5A1C2BF55D5D007B2D3F /* CreateTranslationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTranslationView.swift; sourceTree = "<group>"; };
+		F44D5A1E2BF55D7D007B2D3F /* CreateTranslationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTranslationViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,7 @@
 				F442DD1C2B80B74E0032682E /* CreateImages */,
 				F442DD262B8110C10032682E /* CreateAudio */,
 				F442DD2B2B8113B40032682E /* CreateTranscription */,
+				F44D5A1B2BF55D50007B2D3F /* CreateTranslation */,
 				F442DD302B8119770032682E /* Vision */,
 				F442DCFA2B80A2B30032682E /* Assets.xcassets */,
 				F442DD1A2B80A5990032682E /* SwiftOpenAI.plist */,
@@ -181,6 +186,15 @@
 			path = Vision;
 			sourceTree = "<group>";
 		};
+		F44D5A1B2BF55D50007B2D3F /* CreateTranslation */ = {
+			isa = PBXGroup;
+			children = (
+				F44D5A1C2BF55D5D007B2D3F /* CreateTranslationView.swift */,
+				F44D5A1E2BF55D7D007B2D3F /* CreateTranslationViewModel.swift */,
+			);
+			path = CreateTranslation;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -260,8 +274,10 @@
 			files = (
 				F442DD2D2B8114330032682E /* CreateTranscriptView.swift in Sources */,
 				F442DD202B80B7810032682E /* CreateImagesView.swift in Sources */,
+				F44D5A1F2BF55D7D007B2D3F /* CreateTranslationViewModel.swift in Sources */,
 				F442DD0B2B80A3E80032682E /* ChatView.swift in Sources */,
 				F442DD0F2B80A4330032682E /* TextMessageView.swift in Sources */,
+				F44D5A1D2BF55D5D007B2D3F /* CreateTranslationView.swift in Sources */,
 				F442DD232B80B79C0032682E /* LoadingView.swift in Sources */,
 				F442DD162B80A4E40032682E /* ChatCompletionsViewModel.swift in Sources */,
 				F442DD2F2B8114450032682E /* CreateTranscriptViewModel.swift in Sources */,

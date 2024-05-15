@@ -27,6 +27,8 @@ enum OpenAIEndpoints {
     
     case createTranscription(file: Data, model: OpenAITranscriptionModelType, language: String, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double)
     
+    case createTranslation(file: Data, model: OpenAITranscriptionModelType, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double)
+    
     public var endpoint: Endpoint {
         switch self {
         case .listModels:
@@ -66,6 +68,12 @@ enum OpenAIEndpoints {
                                                prompt: prompt, 
                                                responseFormat: responseFormat, 
                                                temperature: temperature)
+        case .createTranslation(file: let file, model: let model, prompt: let prompt, responseFormat: let responseFormat, temperature: let temperature):
+            return CreateTranslationEndpoint(file: file,
+                                             model: model,
+                                             prompt: prompt,
+                                             responseFormat: responseFormat,
+                                             temperature: temperature)
         }
     }
 }
