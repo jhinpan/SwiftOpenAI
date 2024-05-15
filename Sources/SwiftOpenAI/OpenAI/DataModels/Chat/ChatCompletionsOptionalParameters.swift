@@ -15,8 +15,6 @@ public struct ChatCompletionsOptionalParameters {
                 stop: [String]? = nil,
                 stream: Bool = false,
                 maxTokens: Int? = nil,
-                presencePenalty: Int = 0,
-                frequencyPenalty: Int = 0,
                 user: String? = nil) {
         self.temperature = temperature
         self.topP = topP
