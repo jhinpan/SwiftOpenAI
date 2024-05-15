@@ -24,6 +24,7 @@ This is a Swift community-driven repository for interfacing with the [OpenAI](ht
     - [Audio](#audio)
         - [Create Speech](#create-speech)
         - [Create Transcription](#create-transcription)
+        - [Create Translation](#create-translation)
     - [Models](#models)
         - [List Models](#list-models)
     - [Chats](#chats)
@@ -206,6 +207,39 @@ do {
     }
 } catch {
     // Handle any errors that occur during the transcription process.
+    print(error.localizedDescription)
+}
+```
+
+### [Create Translation](https://platform.openai.com/docs/api-reference/audio/createTranslation)
+Translates audio into English.
+
+```swift
+// Placeholder for the data from your video or audio file.
+let fileData = // Data from your video, audio, etc.
+
+// Specify the translation model to be used, here 'whisper'.
+let model: OpenAITranscriptionModelType = .whisper
+
+do {
+    for try await newMessage in try await openAI.createTranslation(
+        model: model, // The specified translation model.
+        file: fileData, // The audio data to be translated.
+        prompt: "", // An optional prompt for guiding the translation, if needed.
+        responseFormat: .mp3, // The format of the response. Note: Typically, translation responses are in text format.
+        temperature: 1.0 // The creativity level of the translation. A value of 1.0 promotes more creative interpretations.
+    ) {
+        // Print each new translated message as it's received.
+        print("Received Translation \(newMessage)")
+        
+        // Update the UI on the main thread after receiving translation.
+        await MainActor.run {
+            isLoading = false // Update loading state.
+            translation = newMessage.text // Update the translation text.
+        }
+    }
+} catch {
+    // Handle any errors that occur during the translation process.
     print(error.localizedDescription)
 }
 ```

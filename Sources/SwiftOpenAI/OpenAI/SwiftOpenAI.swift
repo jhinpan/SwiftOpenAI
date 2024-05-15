@@ -28,6 +28,9 @@ protocol OpenAIProtocol {
     func createSpeech(model: OpenAITTSModelType, input: String, voice: OpenAIVoiceType, responseFormat: OpenAIAudioResponseType, speed: Double) async throws -> Data?
     
     func createTranscription(model: OpenAITranscriptionModelType, file: Data, language: String, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double) async throws -> AsyncThrowingStream<CreateTranscriptionDataModel, Error>
+    
+    func createTranslation(model: OpenAITranscriptionModelType, file: Data, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double) async throws -> AsyncThrowingStream<CreateTranslationDataModel, Error>
+
 }
 
 // swiftlint:disable line_length
@@ -45,6 +48,7 @@ public class SwiftOpenAI: OpenAIProtocol {
     private let moderationsRequest: ModerationsRequest.Init
     private let createSpeechRequest: CreateSpeechRequest.Init
     private let createTranscriptionRequest: CreateTranscriptionRequest.Init
+    private let createTranslationRequest: CreateTranslationRequest.Init
 
     public init(api: API = API(),
                 apiKey: String,
@@ -57,7 +61,8 @@ public class SwiftOpenAI: OpenAIProtocol {
                 embeddingsRequest: @escaping EmbeddingsRequest.Init = EmbeddingsRequest().execute,
                 moderationsRequest: @escaping ModerationsRequest.Init = ModerationsRequest().execute,
                 createSpeechRequest: @escaping CreateSpeechRequest.Init = CreateSpeechRequest().execute,
-                createTranscriptionRequest: @escaping CreateTranscriptionRequest.Init = CreateTranscriptionRequest().execute) {
+                createTranscriptionRequest: @escaping CreateTranscriptionRequest.Init = CreateTranscriptionRequest().execute,
+                createTranslationRequest: @escaping CreateTranslationRequest.Init = CreateTranslationRequest().execute) {
         self.api = api
         self.apiKey = apiKey
         self.listModelsRequest = listModelsRequest
@@ -70,6 +75,7 @@ public class SwiftOpenAI: OpenAIProtocol {
         self.moderationsRequest = moderationsRequest
         self.createSpeechRequest = createSpeechRequest
         self.createTranscriptionRequest = createTranscriptionRequest
+        self.createTranslationRequest = createTranslationRequest
     }
 
     /**
@@ -406,6 +412,42 @@ public class SwiftOpenAI: OpenAIProtocol {
     */
     public func createTranscription(model: OpenAITranscriptionModelType, file: Data, language: String, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double) async throws -> AsyncThrowingStream<CreateTranscriptionDataModel, Error> {
         try await createTranscriptionRequest(api, apiKey, file, model, language, prompt, responseFormat, temperature)
+    }
+    
+    /**
+      Translates audio files into text using the OpenAI Translation API.
+
+      This method employs the OpenAI Translation API to convert audio files into textual translations. It allows you to specify the translation model, provide specific instructions or context through a prompt, and other parameters to tailor the translation process to your needs. The method supports various file formats and provides flexibility in terms of response format.
+
+      The function is designed with Swift's concurrency features and supports async/await for seamless integration into modern Swift applications.
+
+      - Parameters:
+        - model: An `OpenAITranscriptionModelType` representing the chosen model for translation.
+        - file: A `Data` object containing the audio file to be translated.
+        - prompt: A `String` used to provide any specific instructions or context for the translation.
+        - responseFormat: An `OpenAIAudioResponseType` indicating the format of the translation response.
+        - temperature: A `Double` that adjusts the creativity or variability of the translation.
+
+      - Throws: An error if the API request fails or if there are issues in processing the audio file.
+
+      - Returns: An `AsyncThrowingStream` of `CreateTranslationDataModel`, providing a stream of translation results or errors encountered during the process.
+
+      Example usage:
+
+          let audioFileData = // Your audio file data here
+
+          do {
+              let translationStream = try await createTranslation(model: .base, file: audioFileData, prompt: "Translate this audio", responseFormat: .json, temperature: 0.5)
+              
+              for try await translation in translationStream {
+                  // Process each translation result
+              }
+          } catch {
+              print("Error: \(error)")
+          }
+    */
+    public func createTranslation(model: OpenAITranscriptionModelType, file: Data, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double) async throws -> AsyncThrowingStream<CreateTranslationDataModel, any Error> {
+        try await createTranslationRequest(api, apiKey, file, model, prompt, responseFormat, temperature)
     }
 }
 // swiftlint:enable line_length

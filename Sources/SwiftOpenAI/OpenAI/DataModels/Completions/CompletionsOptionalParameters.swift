@@ -10,8 +10,8 @@ public struct CompletionsOptionalParameters {
     public let logprobs: Int?
     public let echo: Bool?
     public let stop: String?
-    public let presencePenalty: Int?
-    public let frequencyPenalty: Int?
+    public let presencePenalty: Double?
+    public let frequencyPenalty: Double?
     public let bestOf: Int?
     public let user: String?
 
@@ -24,8 +24,8 @@ public struct CompletionsOptionalParameters {
                 logprobs: Int? = nil,
                 echo: Bool? = false,
                 stop: String? = nil,
-                presencePenalty: Int? = 0,
-                frequencyPenalty: Int? = 0,
+                presencePenalty: Double? = 0.0,
+                frequencyPenalty: Double? = 0.0,
                 bestOf: Int? = 1,
                 user: String = "") {
         self.prompt = prompt
