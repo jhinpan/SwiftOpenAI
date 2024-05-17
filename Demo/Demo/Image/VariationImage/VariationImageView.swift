@@ -1,14 +1,11 @@
 import SwiftUI
 
-struct EditImageView: View {
-    var viewModel = EditImageViewModel()
-    @State var text = ""
+struct VariationImageView: View {
+    var viewModel = VariationImageViewModel()
     @State var selectedImage: Image?
     @State var emptyImage: Image = Image(systemName: "photo.on.rectangle.angled")
     @State var showCamera: Bool = false
     @State var showGallery: Bool = false
-    @State var lines: [Line] = []
-    @FocusState var isFocused: Bool
     
     var currentImage: some View {
         if let selectedImage {
@@ -26,7 +23,7 @@ struct EditImageView: View {
     
     var body: some View {
         Form {
-            Text("Create a mask")
+            Text("Create a variation of the selected image")
                 .font(.headline)
                 .padding(.vertical, 12)
             
@@ -39,7 +36,6 @@ struct EditImageView: View {
                     if !viewModel.isLoading {
                         ZStack {
                             currentImage
-                            SwiftBetaCanvas(lines: $lines, currentLineWidth: 30)
                         }
                     } else {
                         ProgressView()
@@ -79,28 +75,18 @@ struct EditImageView: View {
                 .padding(.vertical, 12)
             }
             
-            TextField("Add a text and the AI will edit the image",
-                      text: $text,
-                      axis: .vertical)
-            .lineLimit(10)
-            .lineSpacing(5)
-            
             HStack {
                 Spacer()
                 Button("🪄 Generate Image") {
-                    isFocused = false
                     let selectedImageRenderer = ImageRenderer(content: currentImage)
-                    let maskRenderer = ImageRenderer(content: currentImage.reverseMask { SwiftBetaCanvas(lines: $lines, currentLineWidth: 30) })
-                    
+
                     Task {
                         guard let selecteduiImage = selectedImageRenderer.uiImage,
-                              let selectedPNGData = selecteduiImage.pngData(),
-                              let maskuiImage = maskRenderer.uiImage,
-                              let maskPNGData = maskuiImage.pngData() else {
+                              let selectedPNGData = selecteduiImage.pngData() else {
                             return
                         }
                         
-                        await viewModel.editImage(prompt: text, imageMask: selectedPNGData, maskData: maskPNGData)
+                        await viewModel.variationImage(imageMask: selectedPNGData)
                     }
                 }
                 .buttonStyle(.borderedProminent)
@@ -112,5 +98,5 @@ struct EditImageView: View {
 }
 
 #Preview {
-    EditImageView()
+    VariationImageView()
 }

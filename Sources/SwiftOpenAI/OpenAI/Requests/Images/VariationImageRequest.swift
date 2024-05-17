@@ -1,23 +1,19 @@
 import Foundation
 
-protocol EditImageRequestProtocol {
+protocol VariationImageRequestProtocol {
     func execute(api: API,
                  apiKey: String,
                  model: OpenAIImageModelType,
                  imageData: Data,
-                 maskData: Data,
-                 prompt: String,
                  numberOfImages: Int,
                  size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, Error>
 }
 
-final public class EditImageRequest: NSObject, EditImageRequestProtocol {
+final public class VariationImageRequest: NSObject, VariationImageRequestProtocol {
     public typealias Init = (_ api: API,
                              _ apiKey: String,
                              _ model: OpenAIImageModelType,
                              _ imageData: Data,
-                             _ maskData: Data,
-                             _ prompt: String,
                              _ numberOfImages: Int,
                              _ size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, Error>
     
@@ -33,14 +29,12 @@ final public class EditImageRequest: NSObject, EditImageRequestProtocol {
                         apiKey: String,
                         model: OpenAIImageModelType,
                         imageData: Data,
-                        maskData: Data,
-                        prompt: String,
                         numberOfImages: Int,
                         size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, Error> {
         return AsyncThrowingStream<CreateImageDataModel, Error> { continuation in
             self.continuation = continuation
 
-            var endpoint = OpenAIEndpoints.editImage(model: model).endpoint
+            var endpoint = OpenAIEndpoints.variationImage(model: model).endpoint
             api.routeEndpoint(&endpoint, environment: OpenAIEnvironmentV1())
             
             let boundary = "Boundary-\(UUID().uuidString)"
@@ -52,11 +46,9 @@ final public class EditImageRequest: NSObject, EditImageRequestProtocol {
             
             let formData = MultipartFormData(boundary: boundary)
 
-            formData.appendField(name: "prompt", value: prompt)
             formData.appendField(name: "n", value: String(numberOfImages))
             formData.appendField(name: "size", value: size.rawValue)
             formData.appendImageData(fieldName: "image", data: imageData, filename: "image.png", mimeType: "image/png")
-            formData.appendImageData(fieldName: "mask", data: maskData, filename: "mask.png", mimeType: "image/png")
             formData.finalizeBody()
             
             urlRequest.httpBody = formData.getHttpBody()
@@ -70,11 +62,11 @@ final public class EditImageRequest: NSObject, EditImageRequestProtocol {
     }
 }
 
-extension EditImageRequest: URLSessionDataDelegate {
+extension VariationImageRequest: URLSessionDataDelegate {
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         do {
-            let editImageDataModel = try JSONDecoder().decode(CreateImageDataModel.self, from: data)
-            self.continuation?.yield(editImageDataModel)
+            let variationImageDataModel = try JSONDecoder().decode(CreateImageDataModel.self, from: data)
+            self.continuation?.yield(variationImageDataModel)
         } catch {
             print("Error al parsear JSON:", error.localizedDescription)
         }

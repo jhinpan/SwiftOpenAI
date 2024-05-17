@@ -2,26 +2,24 @@ import Foundation
 import SwiftOpenAI
 
 @Observable
-class EditImageViewModel {
+class VariationImageViewModel {
     private let openAI = SwiftOpenAI(apiKey: Bundle.main.getOpenAIApiKey()!)
     var imageURL: URL?
     var isLoading: Bool = false
     
     @MainActor
-    func editImage(prompt: String, imageMask: Data, maskData: Data) async {
+    func variationImage(imageMask: Data) async {
         isLoading = true
         
         do {
-            for try await editedImage in try await openAI.editImage(
+            for try await variationImage in try await openAI.variationImage(
                 model: .dalle(.dalle2),
                 imageData: imageMask,
-                maskData: maskData,
-                prompt: prompt,
                 numberOfImages: 1,
                 size: .s512
             ) {
                 await MainActor.run {
-                    guard let urlString = editedImage.data.map({ $0.url }).last else {
+                    guard let urlString = variationImage.data.map({ $0.url }).last else {
                         isLoading = false
                         return
                     }
@@ -31,7 +29,7 @@ class EditImageViewModel {
             }
         } catch {
             isLoading = false
-            print("Error creating edit image", error.localizedDescription)
+            print("Error creating variation image", error.localizedDescription)
         }
     }
 }

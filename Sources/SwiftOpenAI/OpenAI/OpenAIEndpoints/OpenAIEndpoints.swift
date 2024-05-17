@@ -7,6 +7,7 @@ enum OpenAIEndpoints {
     case chatCompletionsWithImageInput(model: OpenAIModelType, messages: [MessageChatImageInput], optionalParameters: ChatCompletionsOptionalParameters?)
     case createImage(model: OpenAIImageModelType, prompt: String, numberOfImages: Int, size: ImageSize)
     case editImage(model: OpenAIImageModelType)
+    case variationImage(model: OpenAIImageModelType)
     case embeddings(model: OpenAIModelType, input: String)
     case moderations(input: String)
     case createSpeech(model: OpenAITTSModelType, input: String, voice: OpenAIVoiceType, responseFormat: OpenAIAudioResponseType, speed: Double)
@@ -60,6 +61,8 @@ enum OpenAIEndpoints {
                                              temperature: temperature)
         case .editImage(model: let model):
             return EditImageEndpoint(model: model)
+        case .variationImage(model: let model):
+            return VariationImageEndpoint(model: model)
         }
     }
 }

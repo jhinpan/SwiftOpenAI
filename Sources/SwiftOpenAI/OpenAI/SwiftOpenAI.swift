@@ -10,6 +10,7 @@ protocol OpenAIProtocol {
     async throws -> AsyncThrowingStream<ChatCompletionsStreamDataModel, Error>
     func createImages(model: OpenAIImageModelType, prompt: String, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel?
     func editImage(model: OpenAIImageModelType, imageData: Data, maskData: Data, prompt: String, numberOfImages: Int, size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, Error>
+    func variationImage(model: OpenAIImageModelType, imageData: Data, numberOfImages: Int, size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, Error>
     func embeddings(model: OpenAIModelType, input: String) async throws -> EmbeddingResponseDataModel?
     func moderations(input: String) async throws -> ModerationDataModel?
     func createSpeech(model: OpenAITTSModelType, input: String, voice: OpenAIVoiceType, responseFormat: OpenAIAudioResponseType, speed: Double) async throws -> Data?
@@ -30,6 +31,7 @@ public class SwiftOpenAI: OpenAIProtocol {
     private let createChatCompletionsStreamRequest: CreateChatCompletionsStreamRequest.Init
     private let createImagesRequest: CreateImagesRequest.Init
     private let editImageRequest: EditImageRequest.Init
+    private let variationImageRequest: VariationImageRequest.Init
     private let embeddingsRequest: EmbeddingsRequest.Init
     private let moderationsRequest: ModerationsRequest.Init
     private let createSpeechRequest: CreateSpeechRequest.Init
@@ -45,6 +47,7 @@ public class SwiftOpenAI: OpenAIProtocol {
                 createChatCompletionsStreamRequest: @escaping CreateChatCompletionsStreamRequest.Init = CreateChatCompletionsStreamRequest().execute,
                 createImagesRequest: @escaping CreateImagesRequest.Init = CreateImagesRequest().execute,
                 editImageRequest: @escaping EditImageRequest.Init = EditImageRequest().execute,
+                variationImageRequest: @escaping VariationImageRequest.Init = VariationImageRequest().execute,
                 embeddingsRequest: @escaping EmbeddingsRequest.Init = EmbeddingsRequest().execute,
                 moderationsRequest: @escaping ModerationsRequest.Init = ModerationsRequest().execute,
                 createSpeechRequest: @escaping CreateSpeechRequest.Init = CreateSpeechRequest().execute,
@@ -59,6 +62,7 @@ public class SwiftOpenAI: OpenAIProtocol {
         self.createChatCompletionsStreamRequest = createChatCompletionsStreamRequest
         self.createImagesRequest = createImagesRequest
         self.editImageRequest = editImageRequest
+        self.variationImageRequest = variationImageRequest
         self.embeddingsRequest = embeddingsRequest
         self.moderationsRequest = moderationsRequest
         self.createSpeechRequest = createSpeechRequest
@@ -313,6 +317,44 @@ public class SwiftOpenAI: OpenAIProtocol {
     */
     public func editImage(model: OpenAIImageModelType, imageData: Data, maskData: Data,prompt: String, numberOfImages: Int, size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, Error> {
         try await editImageRequest(api, apiKey, model, imageData, maskData, prompt, numberOfImages, size)
+    }
+    
+    /**
+      Generates variations of a provided image using a specified model with the OpenAI API.
+
+      This method utilizes the OpenAI API to create multiple variations of a given image based on the specified model. It processes the input image data and generates the desired number of image variations, maintaining the specified resolution for the output images.
+
+      The function is designed to work with Swift's concurrency model, supporting async/await calls. This approach allows for non-blocking IO operations, making it ideal for performing network requests efficiently.
+
+      - Parameters:
+        - model: An `OpenAIImageModelType` value representing the specific model to be used for generating image variations.
+        - imageData: A `Data` object containing the binary data of the original image to be varied.
+        - numberOfImages: An `Int` indicating the number of image variations to be generated.
+        - size: An `ImageSize` value that specifies the resolution of the output images.
+
+      - Throws: An error if the API call fails or if there is an issue with parsing the JSON response.
+
+      - Returns: An `AsyncThrowingStream<CreateImageDataModel, any Error>` which asynchronously streams the image variations as they are processed and ready. This allows handling each image result as soon as it is available.
+
+      Example usage:
+
+          let modelType = OpenAIImageModelType.dalle2
+          let imageData = yourImageData
+          let numberOfImages = 5
+          let imageSize: ImageSize = .s1024
+
+          do {
+              let stream = try await variationImage(model: modelType, imageData: imageData, numberOfImages: numberOfImages, size: imageSize)
+              for try await image in stream {
+                  print("Received image variation: \(image)")
+              }
+          } catch {
+              print("Error generating image variations: \(error)")
+          }
+
+    */
+    public func variationImage(model: OpenAIImageModelType, imageData: Data, numberOfImages: Int, size: ImageSize) async throws -> AsyncThrowingStream<CreateImageDataModel, any Error> {
+        try await variationImageRequest(api, apiKey, model, imageData, numberOfImages, size)
     }
 
     /**
