@@ -12,22 +12,14 @@ class EditImageViewModel {
         isLoading = true
         
         do {
-            for try await editedImage in try await openAI.editImage(
-                model: .dalle(.dalle2),
-                imageData: imageMask,
-                maskData: maskData,
-                prompt: prompt,
-                numberOfImages: 1,
-                size: .s512
-            ) {
-                await MainActor.run {
-                    guard let urlString = editedImage.data.map({ $0.url }).last else {
-                        isLoading = false
-                        return
-                    }
-                    imageURL =  URL(string: urlString)
+            let editedImage = try await openAI.editImage(model: .dalle(.dalle2), imageData: imageMask, maskData: maskData, prompt: prompt, numberOfImages: 1, size: .s512)
+            await MainActor.run {
+                guard let editedImage, let urlString = editedImage.data.map({ $0.url }).last else {
                     isLoading = false
+                    return
                 }
+                imageURL =  URL(string: urlString)
+                isLoading = false
             }
         } catch {
             isLoading = false

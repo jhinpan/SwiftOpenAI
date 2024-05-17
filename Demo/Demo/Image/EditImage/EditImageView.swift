@@ -42,10 +42,17 @@ struct EditImageView: View {
                             SwiftBetaCanvas(lines: $lines, currentLineWidth: 30)
                         }
                     } else {
-                        ProgressView()
-                            .padding(.bottom, 12)
-                        Text("Your image is being generated, please wait 5 seconds! 🚀")
-                            .multilineTextAlignment(.center)
+                        HStack {
+                            Spacer()
+                            VStack {
+                                ProgressView()
+                                    .padding(.bottom, 12)
+                                Text("Your image is being generated, please wait 5 seconds! 🚀")
+                                    .multilineTextAlignment(.center)
+                            }
+                            Spacer()
+                        }
+                        
                     }
                 }
                 .frame(width: 300, height: 300)

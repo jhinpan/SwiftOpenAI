@@ -12,20 +12,15 @@ class VariationImageViewModel {
         isLoading = true
         
         do {
-            for try await variationImage in try await openAI.variationImage(
-                model: .dalle(.dalle2),
-                imageData: imageMask,
-                numberOfImages: 1,
-                size: .s512
-            ) {
-                await MainActor.run {
-                    guard let urlString = variationImage.data.map({ $0.url }).last else {
-                        isLoading = false
-                        return
-                    }
-                    imageURL =  URL(string: urlString)
+            let variationImage = try await openAI.variationImage(model: .dalle(.dalle2), imageData: imageMask, numberOfImages: 1, size: .s512)
+            
+            await MainActor.run {
+                guard let variationImage, let urlString = variationImage.data.map({ $0.url }).last else {
                     isLoading = false
+                    return
                 }
+                imageURL =  URL(string: urlString)
+                isLoading = false
             }
         } catch {
             isLoading = false
