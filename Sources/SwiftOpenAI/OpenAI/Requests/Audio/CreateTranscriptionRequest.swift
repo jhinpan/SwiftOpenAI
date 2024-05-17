@@ -44,28 +44,19 @@ final public class CreateTranscriptionRequest: NSObject, CreateTranscriptionRequ
             var endpoint = OpenAIEndpoints.createTranscription(file: file, model: model, language: language, prompt: prompt, responseFormat: responseFormat, temperature: temperature).endpoint
             api.routeEndpoint(&endpoint, environment: OpenAIEnvironmentV1())
             
-            let boundary = UUID().uuidString
+            let boundary = "Boundary-\(UUID().uuidString)"
             
             var urlRequest = api.buildURLRequest(endpoint: endpoint)
             api.addHeaders(urlRequest: &urlRequest,
                            headers: ["Content-Type": "multipart/form-data; boundary=\(boundary)",
                                      "Authorization": "Bearer \(apiKey)"])
             
-            var body = Data()
+            let formData = MultipartFormData(boundary: boundary)
+            formData.appendField(name: "model", value: "whisper-1")
+            formData.appendImageData(fieldName: "file", data: file, filename: "steve.mp4", mimeType: "audio/mpeg")
+            formData.finalizeBody()
             
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"model\"\r\n\r\n".data(using: .utf8)!)
-            body.append("whisper-1\r\n".data(using: .utf8)!)
-            
-            body.append("--\(boundary)\r\n".data(using: .utf8)!)
-            body.append("Content-Disposition: form-data; name=\"file\"; filename=\"steve.mp4\"\r\n".data(using: .utf8)!)
-            body.append("Content-Type: audio/mpeg\r\n\r\n".data(using: .utf8)!)
-            body.append(file)
-            body.append("\r\n".data(using: .utf8)!)
-            
-            body.append("--\(boundary)--\r\n".data(using: .utf8)!)
-            
-            urlRequest.httpBody = body
+            urlRequest.httpBody = formData.getHttpBody()
             
             self.urlSession = URLSession(configuration: .default,
                                          delegate: self,

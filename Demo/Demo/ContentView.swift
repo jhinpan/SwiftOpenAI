@@ -4,6 +4,8 @@ import SwiftOpenAI
 struct ContentView: View {
     @State var chatCompletionsViewModel: ChatCompletionsViewModel = .init()
     @State var createImagesViewModel: CreateImageViewModel = .init()
+    @State var editImageViewModel: EditImageViewModel = .init()
+    @State var variationImageViewModel: VariationImageViewModel = .init()
     @State var createAudioViewModel: CreateAudioViewModel = .init()
     @State var createTranscriptViewModel: CreateTranscriptViewModel = .init()
     @State var createTranslationViewModel: CreateTranslationViewModel = .init()
@@ -49,6 +51,46 @@ struct ContentView: View {
                                 .font(.system(size: 18))
                                 .bold()
                             Text("Learn how to create images with prompts")
+                        }
+                    }
+                }
+                NavigationLink {
+                    EditImageView(viewModel: editImageViewModel)
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationTitle("Edit Image")
+                } label: {
+                    HStack {
+                        Image(systemName: "photo.badge.checkmark.fill")
+                            .foregroundStyle(.white)
+                            .frame(width: 40, height: 40)
+                            .padding(4)
+                            .background(.pink.gradient)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        VStack(alignment: .leading) {
+                            Text("Edit Image")
+                                .font(.system(size: 18))
+                                .bold()
+                            Text("Learn how to edit images with masks and prompts")
+                        }
+                    }
+                }
+                NavigationLink {
+                    VariationImageView(viewModel: variationImageViewModel)
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationTitle("Variate Image")
+                } label: {
+                    HStack {
+                        Image(systemName: "die.face.6.fill")
+                            .foregroundStyle(.white)
+                            .frame(width: 40, height: 40)
+                            .padding(4)
+                            .background(.cyan.gradient)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        VStack(alignment: .leading) {
+                            Text("Variation Image")
+                                .font(.system(size: 18))
+                                .bold()
+                            Text("Learn how to get a variation of images")
                         }
                     }
                 }

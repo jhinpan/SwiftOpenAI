@@ -2,35 +2,21 @@ import Foundation
 
 protocol OpenAIProtocol {
     func listModels() async throws -> ModelListDataModel?
-
-    func completions(model: OpenAIModelType,
-                     optionalParameters: CompletionsOptionalParameters?) async throws -> CompletionsDataModel?
-
-    func createChatCompletions(model: OpenAIModelType,
-                               messages: [MessageChatGPT],
-                               optionalParameters: ChatCompletionsOptionalParameters?) async throws -> ChatCompletionsDataModel?
-    
-    func createChatCompletionsWithImageInput(model: OpenAIModelType,
-                               messages: [MessageChatImageInput],
-                               optionalParameters: ChatCompletionsOptionalParameters?) async throws -> ChatCompletionsDataModel?
-
-    func createChatCompletionsStream(model: OpenAIModelType,
-                                     messages: [MessageChatGPT],
-                                     optionalParameters: ChatCompletionsOptionalParameters?)
+    func completions(model: OpenAIModelType, optionalParameters: CompletionsOptionalParameters?) async throws -> CompletionsDataModel?
+    func createChatCompletions(model: OpenAIModelType, messages: [MessageChatGPT], optionalParameters: ChatCompletionsOptionalParameters?) async throws -> ChatCompletionsDataModel?
+    func createChatCompletionsWithImageInput(model: OpenAIModelType, messages: [MessageChatImageInput], optionalParameters: ChatCompletionsOptionalParameters?) 
+    async throws -> ChatCompletionsDataModel?
+    func createChatCompletionsStream(model: OpenAIModelType, messages: [MessageChatGPT], optionalParameters: ChatCompletionsOptionalParameters?)
     async throws -> AsyncThrowingStream<ChatCompletionsStreamDataModel, Error>
-
     func createImages(model: OpenAIImageModelType, prompt: String, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel?
-
+    func editImage(model: OpenAIImageModelType, imageData: Data, maskData: Data, prompt: String, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel?
+    func variationImage(model: OpenAIImageModelType, imageData: Data, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel?
     func embeddings(model: OpenAIModelType, input: String) async throws -> EmbeddingResponseDataModel?
-
     func moderations(input: String) async throws -> ModerationDataModel?
-    
     func createSpeech(model: OpenAITTSModelType, input: String, voice: OpenAIVoiceType, responseFormat: OpenAIAudioResponseType, speed: Double) async throws -> Data?
-    
-    func createTranscription(model: OpenAITranscriptionModelType, file: Data, language: String, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double) async throws -> AsyncThrowingStream<CreateTranscriptionDataModel, Error>
-    
+    func createTranscription(model: OpenAITranscriptionModelType, file: Data, language: String, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double)
+    async throws -> AsyncThrowingStream<CreateTranscriptionDataModel, Error>
     func createTranslation(model: OpenAITranscriptionModelType, file: Data, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double) async throws -> AsyncThrowingStream<CreateTranslationDataModel, Error>
-
 }
 
 // swiftlint:disable line_length
@@ -44,6 +30,8 @@ public class SwiftOpenAI: OpenAIProtocol {
     private let createChatCompletionsImageInputRequest: CreateChatCompletionsImageInputRequest.Init
     private let createChatCompletionsStreamRequest: CreateChatCompletionsStreamRequest.Init
     private let createImagesRequest: CreateImagesRequest.Init
+    private let editImageRequest: EditImageRequest.Init
+    private let variationImageRequest: VariationImageRequest.Init
     private let embeddingsRequest: EmbeddingsRequest.Init
     private let moderationsRequest: ModerationsRequest.Init
     private let createSpeechRequest: CreateSpeechRequest.Init
@@ -58,6 +46,8 @@ public class SwiftOpenAI: OpenAIProtocol {
                 createChatCompletionsImageInputRequest: @escaping CreateChatCompletionsImageInputRequest.Init = CreateChatCompletionsImageInputRequest().execute,
                 createChatCompletionsStreamRequest: @escaping CreateChatCompletionsStreamRequest.Init = CreateChatCompletionsStreamRequest().execute,
                 createImagesRequest: @escaping CreateImagesRequest.Init = CreateImagesRequest().execute,
+                editImageRequest: @escaping EditImageRequest.Init = EditImageRequest().execute,
+                variationImageRequest: @escaping VariationImageRequest.Init = VariationImageRequest().execute,
                 embeddingsRequest: @escaping EmbeddingsRequest.Init = EmbeddingsRequest().execute,
                 moderationsRequest: @escaping ModerationsRequest.Init = ModerationsRequest().execute,
                 createSpeechRequest: @escaping CreateSpeechRequest.Init = CreateSpeechRequest().execute,
@@ -71,6 +61,8 @@ public class SwiftOpenAI: OpenAIProtocol {
         self.createChatCompletionsImageInputRequest = createChatCompletionsImageInputRequest
         self.createChatCompletionsStreamRequest = createChatCompletionsStreamRequest
         self.createImagesRequest = createImagesRequest
+        self.editImageRequest = editImageRequest
+        self.variationImageRequest = variationImageRequest
         self.embeddingsRequest = embeddingsRequest
         self.moderationsRequest = moderationsRequest
         self.createSpeechRequest = createSpeechRequest
@@ -283,6 +275,80 @@ public class SwiftOpenAI: OpenAIProtocol {
     */
     public func createImages(model: OpenAIImageModelType, prompt: String, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel? {
         try await createImagesRequest(api, apiKey, model, prompt, numberOfImages, size)
+    }
+    
+    /**
+      Edits images based on a provided model, input image, mask, and textual prompt using the OpenAI API.
+
+      This method leverages the OpenAI API to modify images according to a specific model, overlaying changes as directed by the input mask and guided by the textual prompt. The function supports multiple outputs, allowing the generation of several variations based on the number of images requested.
+
+      - Parameters:
+        - model: An `OpenAIImageModelType` value representing the specific model to be used for image editing.
+        - imageData: A `Data` object containing the binary data of the image to be edited.
+        - maskData: A `Data` object containing the binary data of the mask to be applied to the image.
+        - prompt: A `String` that describes the desired modifications or thematic elements to be reflected in the edited image.
+        - numberOfImages: An `Int` indicating the number of edited image variations to be generated.
+        - size: An `ImageSize` value that specifies the resolution of the output images.
+
+      - Throws: An error if the API call fails or if there is an issue with parsing the JSON response.
+
+      - Returns: A `CreateImageDataModel` object containing the edited images.
+
+      Example usage:
+
+          let modelType = OpenAIImageModelType.dalle2
+          let imageData = yourImageData
+          let maskData = yourMaskData
+          let promptText = "A futuristic cityscape."
+          let numberOfImages = 3
+          let imageSize: ImageSize = .s1024
+
+          do {
+              if let editedImages = try await editImage(model: modelType, imageData: imageData, maskData: maskData, prompt: promptText, numberOfImages: numberOfImages, size: imageSize) {
+                  print("Received edited images: \(editedImages)")
+              }
+          } catch {
+              print("Error editing image: \(error)")
+          }
+
+    */
+    public func editImage(model: OpenAIImageModelType, imageData: Data, maskData: Data, prompt: String, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel? {
+        try await editImageRequest(api, apiKey, model, imageData, maskData, prompt, numberOfImages, size)
+    }
+
+    /**
+      Generates variations of a provided image using a specified model with the OpenAI API.
+
+      This method utilizes the OpenAI API to create multiple variations of a given image based on the specified model. It processes the input image data and generates the desired number of image variations, maintaining the specified resolution for the output images.
+
+      - Parameters:
+        - model: An `OpenAIImageModelType` value representing the specific model to be used for generating image variations.
+        - imageData: A `Data` object containing the binary data of the original image to be varied.
+        - numberOfImages: An `Int` indicating the number of image variations to be generated.
+        - size: An `ImageSize` value that specifies the resolution of the output images.
+
+      - Throws: An error if the API call fails or if there is an issue with parsing the JSON response.
+
+      - Returns: A `CreateImageDataModel` object containing the image variations.
+
+      Example usage:
+
+          let modelType = OpenAIImageModelType.dalle2
+          let imageData = yourImageData
+          let numberOfImages = 5
+          let imageSize: ImageSize = .s1024
+
+          do {
+              if let imageVariations = try await variationImage(model: modelType, imageData: imageData, numberOfImages: numberOfImages, size: imageSize) {
+                  print("Received image variations: \(imageVariations)")
+              }
+          } catch {
+              print("Error generating image variations: \(error)")
+          }
+
+    */
+    public func variationImage(model: OpenAIImageModelType, imageData: Data, numberOfImages: Int, size: ImageSize) async throws -> CreateImageDataModel? {
+        try await variationImageRequest(api, apiKey, model, imageData, numberOfImages, size)
     }
 
     /**
