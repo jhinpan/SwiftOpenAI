@@ -30,6 +30,14 @@
 		F442DD342B8119A20032682E /* VisionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F442DD332B8119A20032682E /* VisionViewModel.swift */; };
 		F44D5A1D2BF55D5D007B2D3F /* CreateTranslationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44D5A1C2BF55D5D007B2D3F /* CreateTranslationView.swift */; };
 		F44D5A1F2BF55D7D007B2D3F /* CreateTranslationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F44D5A1E2BF55D7D007B2D3F /* CreateTranslationViewModel.swift */; };
+		F4AA12212BF72F6100F2B6BB /* EditImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA12202BF72F6100F2B6BB /* EditImageView.swift */; };
+		F4AA12232BF72F8900F2B6BB /* EditImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4AA12222BF72F8900F2B6BB /* EditImageViewModel.swift */; };
+		F4EAB7B62BF7B8D700ECA18F /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7B52BF7B8D700ECA18F /* Line.swift */; };
+		F4EAB7B82BF7B8E000ECA18F /* Point.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7B72BF7B8E000ECA18F /* Point.swift */; };
+		F4EAB7BA2BF7B8EE00ECA18F /* SwiftBetaCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7B92BF7B8EE00ECA18F /* SwiftBetaCanvas.swift */; };
+		F4EAB7BC2BF7B8FE00ECA18F /* View+ReverseMask.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7BB2BF7B8FE00ECA18F /* View+ReverseMask.swift */; };
+		F4EAB7C12BF7B93E00ECA18F /* GalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7C02BF7B93E00ECA18F /* GalleryView.swift */; };
+		F4EAB7C32BF7B94C00ECA18F /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7C22BF7B94C00ECA18F /* CameraView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +64,14 @@
 		F442DD332B8119A20032682E /* VisionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisionViewModel.swift; sourceTree = "<group>"; };
 		F44D5A1C2BF55D5D007B2D3F /* CreateTranslationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTranslationView.swift; sourceTree = "<group>"; };
 		F44D5A1E2BF55D7D007B2D3F /* CreateTranslationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTranslationViewModel.swift; sourceTree = "<group>"; };
+		F4AA12202BF72F6100F2B6BB /* EditImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageView.swift; sourceTree = "<group>"; };
+		F4AA12222BF72F8900F2B6BB /* EditImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditImageViewModel.swift; sourceTree = "<group>"; };
+		F4EAB7B52BF7B8D700ECA18F /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		F4EAB7B72BF7B8E000ECA18F /* Point.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Point.swift; sourceTree = "<group>"; };
+		F4EAB7B92BF7B8EE00ECA18F /* SwiftBetaCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftBetaCanvas.swift; sourceTree = "<group>"; };
+		F4EAB7BB2BF7B8FE00ECA18F /* View+ReverseMask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+ReverseMask.swift"; sourceTree = "<group>"; };
+		F4EAB7C02BF7B93E00ECA18F /* GalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryView.swift; sourceTree = "<group>"; };
+		F4EAB7C22BF7B94C00ECA18F /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,10 +108,8 @@
 				F442DCF62B80A2B20032682E /* DemoApp.swift */,
 				F442DCF82B80A2B20032682E /* ContentView.swift */,
 				F442DD092B80A3D10032682E /* ChatCompletions */,
-				F442DD1C2B80B74E0032682E /* CreateImages */,
-				F442DD262B8110C10032682E /* CreateAudio */,
-				F442DD2B2B8113B40032682E /* CreateTranscription */,
-				F44D5A1B2BF55D50007B2D3F /* CreateTranslation */,
+				F4AA121F2BF72EB300F2B6BB /* Image */,
+				F4AA121E2BF72EAB00F2B6BB /* Audio */,
 				F442DD302B8119770032682E /* Vision */,
 				F442DCFA2B80A2B30032682E /* Assets.xcassets */,
 				F442DD1A2B80A5990032682E /* SwiftOpenAI.plist */,
@@ -195,6 +209,48 @@
 			path = CreateTranslation;
 			sourceTree = "<group>";
 		};
+		F4AA121D2BF72E9600F2B6BB /* EditImage */ = {
+			isa = PBXGroup;
+			children = (
+				F4AA12202BF72F6100F2B6BB /* EditImageView.swift */,
+				F4AA12222BF72F8900F2B6BB /* EditImageViewModel.swift */,
+				F4EAB7B42BF7B8CC00ECA18F /* Dependencies */,
+			);
+			path = EditImage;
+			sourceTree = "<group>";
+		};
+		F4AA121E2BF72EAB00F2B6BB /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				F442DD262B8110C10032682E /* CreateAudio */,
+				F442DD2B2B8113B40032682E /* CreateTranscription */,
+				F44D5A1B2BF55D50007B2D3F /* CreateTranslation */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		F4AA121F2BF72EB300F2B6BB /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				F442DD1C2B80B74E0032682E /* CreateImages */,
+				F4AA121D2BF72E9600F2B6BB /* EditImage */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		F4EAB7B42BF7B8CC00ECA18F /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				F4EAB7B52BF7B8D700ECA18F /* Line.swift */,
+				F4EAB7B72BF7B8E000ECA18F /* Point.swift */,
+				F4EAB7B92BF7B8EE00ECA18F /* SwiftBetaCanvas.swift */,
+				F4EAB7BB2BF7B8FE00ECA18F /* View+ReverseMask.swift */,
+				F4EAB7C02BF7B93E00ECA18F /* GalleryView.swift */,
+				F4EAB7C22BF7B94C00ECA18F /* CameraView.swift */,
+			);
+			path = Dependencies;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -272,25 +328,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F4AA12232BF72F8900F2B6BB /* EditImageViewModel.swift in Sources */,
 				F442DD2D2B8114330032682E /* CreateTranscriptView.swift in Sources */,
 				F442DD202B80B7810032682E /* CreateImagesView.swift in Sources */,
 				F44D5A1F2BF55D7D007B2D3F /* CreateTranslationViewModel.swift in Sources */,
 				F442DD0B2B80A3E80032682E /* ChatView.swift in Sources */,
 				F442DD0F2B80A4330032682E /* TextMessageView.swift in Sources */,
 				F44D5A1D2BF55D5D007B2D3F /* CreateTranslationView.swift in Sources */,
+				F4AA12212BF72F6100F2B6BB /* EditImageView.swift in Sources */,
 				F442DD232B80B79C0032682E /* LoadingView.swift in Sources */,
+				F4EAB7B62BF7B8D700ECA18F /* Line.swift in Sources */,
 				F442DD162B80A4E40032682E /* ChatCompletionsViewModel.swift in Sources */,
+				F4EAB7BC2BF7B8FE00ECA18F /* View+ReverseMask.swift in Sources */,
 				F442DD2F2B8114450032682E /* CreateTranscriptViewModel.swift in Sources */,
 				F442DCF92B80A2B20032682E /* ContentView.swift in Sources */,
 				F442DD192B80A57D0032682E /* Bundle+OpenAIAPIKey.swift in Sources */,
 				F442DD282B8110FA0032682E /* CreateAudioView.swift in Sources */,
 				F442DD132B80A4760032682E /* TypingIndicatorView.swift in Sources */,
+				F4EAB7C12BF7B93E00ECA18F /* GalleryView.swift in Sources */,
 				F442DD252B80B7C70032682E /* CreateImageViewModel.swift in Sources */,
 				F442DCF72B80A2B20032682E /* DemoApp.swift in Sources */,
 				F442DD2A2B8111190032682E /* CreateAudioViewModel.swift in Sources */,
+				F4EAB7C32BF7B94C00ECA18F /* CameraView.swift in Sources */,
 				F442DD322B8119900032682E /* VisionView.swift in Sources */,
 				F442DD342B8119A20032682E /* VisionViewModel.swift in Sources */,
+				F4EAB7BA2BF7B8EE00ECA18F /* SwiftBetaCanvas.swift in Sources */,
 				F442DD0D2B80A4230032682E /* ConversationView.swift in Sources */,
+				F4EAB7B82BF7B8E000ECA18F /* Point.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

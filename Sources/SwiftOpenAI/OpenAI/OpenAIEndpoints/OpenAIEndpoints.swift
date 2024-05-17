@@ -2,31 +2,15 @@ import Foundation
 
 enum OpenAIEndpoints {
     case listModels
-    
-    case completions(model: OpenAIModelType,
-                     optionalParameters: CompletionsOptionalParameters?)
-    
-    case chatCompletions(model: OpenAIModelType,
-                         messages: [MessageChatGPT],
-                         optionalParameters: ChatCompletionsOptionalParameters?)
-    
-    case chatCompletionsWithImageInput(model: OpenAIModelType,
-                                       messages: [MessageChatImageInput],
-                                       optionalParameters: ChatCompletionsOptionalParameters?)
-    
-    case createImage(model: OpenAIImageModelType,
-                     prompt: String,
-                     numberOfImages: Int,
-                     size: ImageSize)
-    
+    case completions(model: OpenAIModelType, optionalParameters: CompletionsOptionalParameters?)
+    case chatCompletions(model: OpenAIModelType, messages: [MessageChatGPT], optionalParameters: ChatCompletionsOptionalParameters?)
+    case chatCompletionsWithImageInput(model: OpenAIModelType, messages: [MessageChatImageInput], optionalParameters: ChatCompletionsOptionalParameters?)
+    case createImage(model: OpenAIImageModelType, prompt: String, numberOfImages: Int, size: ImageSize)
+    case editImage(model: OpenAIImageModelType)
     case embeddings(model: OpenAIModelType, input: String)
-    
     case moderations(input: String)
-    
     case createSpeech(model: OpenAITTSModelType, input: String, voice: OpenAIVoiceType, responseFormat: OpenAIAudioResponseType, speed: Double)
-    
     case createTranscription(file: Data, model: OpenAITranscriptionModelType, language: String, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double)
-    
     case createTranslation(file: Data, model: OpenAITranscriptionModelType, prompt: String, responseFormat: OpenAIAudioResponseType, temperature: Double)
     
     public var endpoint: Endpoint {
@@ -74,6 +58,8 @@ enum OpenAIEndpoints {
                                              prompt: prompt,
                                              responseFormat: responseFormat,
                                              temperature: temperature)
+        case .editImage(model: let model):
+            return EditImageEndpoint(model: model)
         }
     }
 }
