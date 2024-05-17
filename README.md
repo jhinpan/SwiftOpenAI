@@ -21,6 +21,8 @@ This is a Swift community-driven repository for interfacing with the [OpenAI](ht
     - [Secure your API Key using a .plist](#secure-your-api-key-using-a-plist)
     - [Images](#images)
         - [Create Image](#create-image)
+        - [Edit Image](#edit-image)
+        - [Variation Image](#variation-image)
     - [Audio](#audio)
         - [Create Speech](#create-speech)
         - [Create Transcription](#create-transcription)
@@ -137,6 +139,62 @@ do {
 } catch {
     // Handle any errors that occur during image creation.
     print("Error: \(error)")
+}
+```
+
+### [Edit Image](https://platform.openai.com/docs/api-reference/images/createVariation)
+Creates an edited or extended image given an original image and a prompt.
+
+```swift
+do {
+    // Attempt to edit an image using OpenAI's DALL-E 2 model.
+    let modelType = OpenAIImageModelType.dalle(.dalle2) // Specify the DALL-E 2 model.
+    let imageData = yourImageData // Binary data of the image to be edited.
+    let maskData = yourMaskData // Binary data of the mask to be applied.
+    let promptText = "A futuristic cityscape." // Describe the desired modifications.
+    let numberOfImages = 3 // Request multiple edited image variations.
+    let imageSize: ImageSize = .s1024 // Specify the size of the generated images.
+
+    // Request the edited images and process them.
+    if let editedImages = try await openAI.editImage(
+        model: modelType,
+        imageData: imageData,
+        maskData: maskData,
+        prompt: promptText,
+        numberOfImages: numberOfImages,
+        size: imageSize
+    ) {
+        print("Received edited images: \(editedImages)")
+    }
+} catch {
+    // Handle any errors that occur during the image editing process.
+    print("Error editing image: \(error)")
+}
+```
+
+### [Variation Image](https://platform.openai.com/docs/api-reference/images/createVariation)
+Generate variations of a provided image using a specific model with the OpenAI API, utilizing DALL·E 2
+
+```swift
+do {
+    // Attempt to create image variations using OpenAI's DALL-E 2 model.
+    let modelType = OpenAIImageModelType.dalle(.dalle2) // Specify the DALL-E 2 model.
+    let imageData = yourImageData // Binary data of the original image to be varied.
+    let numberOfImages = 5 // Request multiple image variations.
+    let imageSize: ImageSize = .s1024 // Specify the size of the generated images.
+
+    // Request the image variations and process them.
+    if let imageVariations = try await openAI.variationImage(
+        model: modelType,
+        imageData: imageData,
+        numberOfImages: numberOfImages,
+        size: imageSize
+    ) {
+        print("Received image variations: \(imageVariations)")
+    }
+} catch {
+    // Handle any errors that occur during the image variation creation process.
+    print("Error generating image variations: \(error)")
 }
 ```
 
