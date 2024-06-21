@@ -54,6 +54,6 @@ struct ChatView: View {
     }
 }
 
-#Preview {
-    ChatView(viewModel: .constant(.init()))
-}
+//#Preview {
+//    ChatView(viewModel: .constant(.init()))
+//}
