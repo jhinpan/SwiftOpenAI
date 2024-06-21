@@ -28,5 +28,8 @@ xcuserdata/
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+# My API key for testing
+Demo/Demo/SwiftOpenAI.plist
+
 # End of https://www.toptal.com/developers/gitignore/api/swiftpm,swiftpackagemanager,xcode
 .DS_Store
