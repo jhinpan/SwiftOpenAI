@@ -191,7 +191,7 @@ struct ContentView: View {
                             Text("Voice Interaction")
                                 .font(.system(size: 18))
                                 .bold()
-                            Text("Speak to the app and hear responses")
+                            Text("Speak to the Agent and hear responses")
                         }
                     }
                 }

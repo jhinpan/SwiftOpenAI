@@ -62,6 +62,6 @@ struct CreateTranscriptView: View {
     }
 }
 
-#Preview {
-    CreateTranscriptView(viewModel: .constant(.init()))
-}
+//#Preview {
+//    CreateTranscriptView(viewModel: .constant(.init()))
+//}

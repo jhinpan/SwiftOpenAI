@@ -1,6 +1,8 @@
 import SwiftUI
 import AVKit
 
+// Text-to-Speech Feature
+
 struct CreateAudioView: View {
     var viewModel: CreateAudioViewModel
     @State var prompt: String = "Hello, I'm SwiftBeta, a developer who in his free time tries to teach through his blog swiftbeta.com and his YouTube channel. Now I'm adding the OpenAI API to transform this text into audio"
@@ -74,6 +76,6 @@ struct CreateAudioView: View {
     }
 }
 
-#Preview {
-    CreateAudioView(viewModel: .init())
-}
+//#Preview {
+//    CreateAudioView(viewModel: .init())
+//}
