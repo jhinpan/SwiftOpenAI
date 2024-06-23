@@ -40,6 +40,8 @@
 		F4EAB7C32BF7B94C00ECA18F /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7C22BF7B94C00ECA18F /* CameraView.swift */; };
 		F4EAB7C62BF7F47C00ECA18F /* VariationImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7C52BF7F47C00ECA18F /* VariationImageView.swift */; };
 		F4EAB7C82BF7F48800ECA18F /* VariationImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7C72BF7F48800ECA18F /* VariationImageViewModel.swift */; };
+		FC5388512C26D8F40008EA9D /* VoiceInteractionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5388502C26D8F40008EA9D /* VoiceInteractionViewModel.swift */; };
+		FC5388532C26D91E0008EA9D /* VoiceInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +79,9 @@
 		F4EAB7C52BF7F47C00ECA18F /* VariationImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariationImageView.swift; sourceTree = "<group>"; };
 		F4EAB7C72BF7F48800ECA18F /* VariationImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariationImageViewModel.swift; sourceTree = "<group>"; };
 		FC53882E2C25B55D0008EA9D /* SwiftOpenAIDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftOpenAIDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FC5388502C26D8F40008EA9D /* VoiceInteractionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInteractionViewModel.swift; sourceTree = "<group>"; };
+		FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInteractionView.swift; sourceTree = "<group>"; };
+		FC5388542C26DC8C0008EA9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +123,8 @@
 		F442DCF52B80A2B20032682E /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				FC5388542C26DC8C0008EA9D /* Info.plist */,
+				FC53884F2C26D8B10008EA9D /* Voice Interaction */,
 				F442DCF62B80A2B20032682E /* DemoApp.swift */,
 				F442DCF82B80A2B20032682E /* ContentView.swift */,
 				F442DD092B80A3D10032682E /* ChatCompletions */,
@@ -274,6 +281,15 @@
 			path = VariationImage;
 			sourceTree = "<group>";
 		};
+		FC53884F2C26D8B10008EA9D /* Voice Interaction */ = {
+			isa = PBXGroup;
+			children = (
+				FC5388502C26D8F40008EA9D /* VoiceInteractionViewModel.swift */,
+				FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */,
+			);
+			path = "Voice Interaction";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -385,6 +401,7 @@
 				F442DD202B80B7810032682E /* CreateImagesView.swift in Sources */,
 				F44D5A1F2BF55D7D007B2D3F /* CreateTranslationViewModel.swift in Sources */,
 				F442DD0B2B80A3E80032682E /* ChatView.swift in Sources */,
+				FC5388532C26D91E0008EA9D /* VoiceInteractionView.swift in Sources */,
 				F442DD0F2B80A4330032682E /* TextMessageView.swift in Sources */,
 				F44D5A1D2BF55D5D007B2D3F /* CreateTranslationView.swift in Sources */,
 				F4AA12212BF72F6100F2B6BB /* EditImageView.swift in Sources */,
@@ -405,6 +422,7 @@
 				F4EAB7C32BF7B94C00ECA18F /* CameraView.swift in Sources */,
 				F442DD322B8119900032682E /* VisionView.swift in Sources */,
 				F442DD342B8119A20032682E /* VisionViewModel.swift in Sources */,
+				FC5388512C26D8F40008EA9D /* VoiceInteractionViewModel.swift in Sources */,
 				F4EAB7BA2BF7B8EE00ECA18F /* SwiftBetaCanvas.swift in Sources */,
 				F442DD0D2B80A4230032682E /* ConversationView.swift in Sources */,
 				F4EAB7B82BF7B8E000ECA18F /* Point.swift in Sources */,
@@ -551,8 +569,10 @@
 				DEVELOPMENT_TEAM = AHZ3MZT3PF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = SwiftOpenAIDemo;
+				INFOPLIST_FILE = Demo/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera so you can take photos.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to capture your voice for speech recognition.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We need your permission to use speech recognition to help you interact with the app.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -585,8 +605,10 @@
 				DEVELOPMENT_TEAM = AHZ3MZT3PF;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = SwiftOpenAIDemo;
+				INFOPLIST_FILE = Demo/Info.plist;
 				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera so you can take photos.";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to capture your voice for speech recognition.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We need your permission to use speech recognition to help you interact with the app.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

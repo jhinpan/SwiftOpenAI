@@ -2,7 +2,7 @@ import SwiftUI
 
 struct ChatView: View {
     @Binding var viewModel: ChatCompletionsViewModel
-    @State var prompt: String = "Can you provide a detailed overview of the development process and the key features that distinguished the first iPhone from previous mobile phones? Please include information on its technological innovations and the impact it had on the smartphone market"
+    @State var prompt: String = "Can you show which modules we have "
     
     var body: some View {
         VStack {
@@ -13,7 +13,7 @@ struct ChatView: View {
             Spacer()
             
             HStack {
-                TextField("Write something for ChatGPT", text: $prompt, axis: .vertical)
+                TextField("Write something for GPT-Allybits", text: $prompt, axis: .vertical)
                     .padding(12)
                     .background(Color(.systemGray6))
                     .cornerRadius(25)

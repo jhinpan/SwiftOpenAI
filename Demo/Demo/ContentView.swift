@@ -10,6 +10,7 @@ struct ContentView: View {
     @State var createTranscriptViewModel: CreateTranscriptViewModel = .init()
     @State var createTranslationViewModel: CreateTranslationViewModel = .init()
     @State var visionViewModel: VisionViewModel = .init()
+    @State var voiceInteractionViewModel: VoiceInteractionViewModel = .init()
     
     var body: some View {
         NavigationStack {
@@ -171,6 +172,26 @@ struct ContentView: View {
                                 .font(.system(size: 18))
                                 .bold()
                             Text("Learn how to process image inputs with GPT-4")
+                        }
+                    }
+                }
+                NavigationLink {
+                    VoiceInteractionView(viewModel: voiceInteractionViewModel)
+                        .navigationBarTitleDisplayMode(.large)
+                        .navigationTitle("Voice Interaction")
+                } label: {
+                    HStack {
+                        Image(systemName: "ear")
+                            .foregroundStyle(.white)
+                            .frame(width: 40, height: 40)
+                            .padding(4)
+                            .background(.teal.gradient)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                        VStack(alignment: .leading) {
+                            Text("Voice Interaction")
+                                .font(.system(size: 18))
+                                .bold()
+                            Text("Speak to the app and hear responses")
                         }
                     }
                 }

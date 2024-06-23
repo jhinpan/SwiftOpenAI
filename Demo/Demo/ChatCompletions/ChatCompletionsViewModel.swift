@@ -5,7 +5,7 @@ import Observation
 @Observable
 final class ChatCompletionsViewModel {
     private let openAI = SwiftOpenAI(apiKey: Bundle.main.getOpenAIApiKey()!)
-    var messages: [MessageChatGPT] = [.init(text: "I am an AI and I am here to help you.", role: .system)]
+    var messages: [MessageChatGPT] = [.init(text: "I am an Agent for Allybits and I am here to help you.", role: .system)]
     var currentMessage: MessageChatGPT = .init(text: "", role: .assistant)
     var isStream: Bool = true
     
@@ -21,6 +21,7 @@ final class ChatCompletionsViewModel {
         let optionalParameters = ChatCompletionsOptionalParameters(temperature: 0.5,
                                                                    stream: isStream,
                                                                    maxTokens: 2000)
+        // Steam Chat Completion
         if isStream {
             do {
                 for try await newMessage in try await openAI.createChatCompletionsStream(model: .gpt4o(.base),

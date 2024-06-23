@@ -43,6 +43,6 @@ struct TextMessageView: View {
     }
 }
 
-#Preview {
-    TextMessageView(message: .init(text: "Hello! my name is SwiftBeta", role: .user))
-}
+//#Preview {
+//    TextMessageView(message: .init(text: "Hello! my name is SwiftBeta", role: .user))
+//}
