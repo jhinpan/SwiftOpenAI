@@ -8,6 +8,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     @Published var responseText: String = ""
     @Published var isLoadingTextToSpeechAudio: TextToSpeechType = .noExecuted
     @Published var isListening: Bool = false
+    @Published var log: [String] = []
     
     private let openAIClient = SwiftOpenAI(apiKey: Bundle.main.getOpenAIApiKey()!)
     private let speechRecognizer = SFSpeechRecognizer()
@@ -33,12 +34,15 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     }
     
     func startRecording() {
+        log.append("Starting recording...")
+        
         // Ensure audio session is active and configured for recording
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
+            log.append("Failed to set up audio session: \(error.localizedDescription)")
             print("Failed to set up audio session: \(error.localizedDescription)")
             return
         }
@@ -58,7 +62,9 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
         audioEngine.prepare()
         do {
             try audioEngine.start()
+            log.append("Audio engine started")
         } catch {
+            log.append("Failed to start audio engine: \(error.localizedDescription)")
             print("Failed to start audio engine: \(error.localizedDescription)")
             return
         }
@@ -71,6 +77,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
             DispatchQueue.main.async {
                 if let result = result {
                     self.recognizedText = result.bestTranscription.formattedString
+                    self.log.append("Recognized text: \(self.recognizedText)")
                 }
                 
                 if error != nil || result?.isFinal == true {
@@ -91,16 +98,21 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
             self.isListening = false
         }
         
+        log.append("Stopped recording")
+        
         // Deactivate the audio session
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
+            log.append("Failed to deactivate audio session: \(error.localizedDescription)")
             print("Failed to deactivate audio session: \(error.localizedDescription)")
         }
     }
     
     func processVoiceInput() {
+        log.append("Processing voice input...")
+        
         Task {
             do {
                 if let response = try await openAIClient.createChatCompletions(
@@ -111,11 +123,13 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                     if let textResponse = response.choices.first?.message.content {
                         DispatchQueue.main.async {
                             self.responseText = textResponse
+                            self.log.append("GPT-4o response: \(self.responseText)")
                         }
                         await self.createSpeech(input: textResponse)
                     }
                 }
             } catch {
+                log.append("Error processing voice input: \(error.localizedDescription)")
                 print("Error processing voice input: \(error.localizedDescription)")
             }
         }
@@ -123,6 +137,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     
     @MainActor
     func createSpeech(input: String) async {
+        log.append("Creating speech...")
         isLoadingTextToSpeechAudio = .isLoading
         
         do {
@@ -137,6 +152,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                let data {
                 do {
                     try data.write(to: filePath)
+                    log.append("File created: \(filePath)")
                     print("File created: \(filePath)")
                     
                     // Configure audio session for playback
@@ -149,16 +165,18 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                     audioPlayer?.prepareToPlay()
                     audioPlayer?.play()
                     isLoadingTextToSpeechAudio = .finishedLoading
-                    
-                    print("Audio playback started")
+                    log.append("Audio playback started")
                 } catch {
+                    log.append("Error initializing audio player: \(error.localizedDescription)")
                     print("Error initializing audio player: \(error.localizedDescription)")
                 }
             } else {
+                log.append("Error trying to save file in filePath")
                 print("Error trying to save file in filePath")
             }
             
         } catch {
+            log.append("Error creating Audios: \(error.localizedDescription)")
             print("Error creating Audios: \(error.localizedDescription)")
         }
     }
@@ -167,6 +185,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
 extension VoiceInteractionViewModel: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         isLoadingTextToSpeechAudio = .finishedPlaying
+        log.append("Audio playback finished")
         print("Audio playback finished")
     }
 }

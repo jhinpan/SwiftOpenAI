@@ -52,6 +52,23 @@ struct VoiceInteractionView: View {
                     .foregroundColor(isRecording ? .red : .blue)
             }
             .padding(.top, 20)
+            
+            Spacer()
+            
+            VStack(alignment: .leading) {
+                Text("Log:")
+                    .font(.title2)
+                    .padding(.bottom, 10)
+                
+                ScrollView {
+                    ForEach(viewModel.log, id: \.self) { logEntry in
+                        Text(logEntry)
+                            .padding(.vertical, 2)
+                            .foregroundColor(.gray)
+                    }
+                }
+            }
+            .padding()
         }
         .padding(.top)
     }
