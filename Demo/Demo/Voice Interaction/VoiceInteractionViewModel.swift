@@ -17,9 +17,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     private var recognitionTask: SFSpeechRecognitionTask?
     private var audioPlayer: AVAudioPlayer?
     
-    private let initialPrompt = """
-    You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules.
-    """
+    var initialPrompt: String
     var modulesData: ModulesData?
     
     enum TextToSpeechType {
@@ -30,14 +28,30 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     }
     
     override init() {
+        self.modulesData = loadModulesData()
+        self.initialPrompt = VoiceInteractionViewModel.createInitialPrompt(with: self.modulesData)
         super.init()
+        
         AVAudioSession.sharedInstance().requestRecordPermission { granted in
             if !granted {
                 print("Microphone permission not granted")
             }
         }
-        self.modulesData = loadModulesData()  // Load the JSON data
-        self.log.append((UUID().uuidString, initialPrompt))  // Log the initial prompt with a unique ID
+        
+        self.log.append((UUID().uuidString, self.initialPrompt))  // Log the initial prompt with a unique ID
+    }
+    
+    static func createInitialPrompt(with modulesData: ModulesData?) -> String {
+        var prompt = """
+        You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules.
+        """
+        if let modulesData = modulesData {
+            let sensingModules = modulesData.sensingModules.map { "\($0.name): \($0.description)" }.joined(separator: ", ")
+            let feedbackModules = modulesData.feedbackModules.map { "\($0.name): \($0.description)" }.joined(separator: ", ")
+            prompt += "\nSensing Modules: \(sensingModules)"
+            prompt += "\nFeedback Modules: \(feedbackModules)"
+        }
+        return prompt
     }
     
     func startRecording() {
@@ -225,6 +239,7 @@ func loadModulesData() -> ModulesData? {
     do {
         let data = try Data(contentsOf: url)
         let modulesData = try JSONDecoder().decode(ModulesData.self, from: data)
+        print("Modules data loaded successfully")  // Debugging statement
         return modulesData
     } catch {
         print("Error loading JSON data: \(error)")
