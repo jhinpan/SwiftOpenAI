@@ -1,0 +1,26 @@
+{
+    "sensingModules": [
+      {
+        "id": "1",
+        "name": "Temperature Sensor",
+        "description": "Measures the ambient temperature."
+      },
+      {
+        "id": "2",
+        "name": "Proximity Sensor",
+        "description": "Detects the presence of nearby objects."
+      }
+    ],
+    "feedbackModules": [
+      {
+        "id": "1",
+        "name": "Vibration Motor",
+        "description": "Provides haptic feedback."
+      },
+      {
+        "id": "2",
+        "name": "LED Light",
+        "description": "Provides visual feedback."
+      }
+    ]
+  }

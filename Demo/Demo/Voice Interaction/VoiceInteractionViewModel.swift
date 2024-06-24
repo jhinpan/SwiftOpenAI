@@ -8,7 +8,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     @Published var responseText: String = ""
     @Published var isLoadingTextToSpeechAudio: TextToSpeechType = .noExecuted
     @Published var isListening: Bool = false
-    @Published var log: [String] = []
+    @Published var log: [(String, String)] = []
     
     private let openAIClient = SwiftOpenAI(apiKey: Bundle.main.getOpenAIApiKey()!)
     private let speechRecognizer = SFSpeechRecognizer()
@@ -16,6 +16,11 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
     private var recognitionTask: SFSpeechRecognitionTask?
     private var audioPlayer: AVAudioPlayer?
+    
+    private let initialPrompt = """
+    You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules.
+    """
+    var modulesData: ModulesData?
     
     enum TextToSpeechType {
         case noExecuted
@@ -31,10 +36,12 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                 print("Microphone permission not granted")
             }
         }
+        self.modulesData = loadModulesData()  // Load the JSON data
+        self.log.append((UUID().uuidString, initialPrompt))  // Log the initial prompt with a unique ID
     }
     
     func startRecording() {
-        log.append("Starting recording...")
+        log.append((UUID().uuidString, "Starting recording..."))
         
         // Ensure audio session is active and configured for recording
         do {
@@ -42,7 +49,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
             try audioSession.setCategory(.playAndRecord, mode: .default, options: .defaultToSpeaker)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
-            log.append("Failed to set up audio session: \(error.localizedDescription)")
+            log.append((UUID().uuidString, "Failed to set up audio session: \(error.localizedDescription)"))
             print("Failed to set up audio session: \(error.localizedDescription)")
             return
         }
@@ -62,9 +69,9 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
         audioEngine.prepare()
         do {
             try audioEngine.start()
-            log.append("Audio engine started")
+            log.append((UUID().uuidString, "Audio engine started"))
         } catch {
-            log.append("Failed to start audio engine: \(error.localizedDescription)")
+            log.append((UUID().uuidString, "Failed to start audio engine: \(error.localizedDescription)"))
             print("Failed to start audio engine: \(error.localizedDescription)")
             return
         }
@@ -74,16 +81,18 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
         }
         
         recognitionTask = speechRecognizer?.recognitionTask(with: recognitionRequest!) { result, error in
-            DispatchQueue.main.async {
-                if let result = result {
+            if let result = result {
+                DispatchQueue.main.async {
                     self.recognizedText = result.bestTranscription.formattedString
-                    self.log.append("Recognized text: \(self.recognizedText)")
+                    print("Recognized text: \(self.recognizedText)")  // Debugging statement
+                    self.log.append((UUID().uuidString, "Partial recognized text: \(self.recognizedText)")) // Log partial results
                 }
-                
-                if error != nil || result?.isFinal == true {
-                    self.stopRecording()
-                    self.processVoiceInput()
-                }
+            }
+            
+            if error != nil || result?.isFinal == true {
+                self.stopRecording()
+                self.log.append((UUID().uuidString, "Final recognized text: \(self.recognizedText)"))
+                self.processVoiceInput()
             }
         }
     }
@@ -98,38 +107,38 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
             self.isListening = false
         }
         
-        log.append("Stopped recording")
+        log.append((UUID().uuidString, "Stopped recording"))
         
         // Deactivate the audio session
         do {
             let audioSession = AVAudioSession.sharedInstance()
             try audioSession.setActive(false, options: .notifyOthersOnDeactivation)
         } catch {
-            log.append("Failed to deactivate audio session: \(error.localizedDescription)")
+            log.append((UUID().uuidString, "Failed to deactivate audio session: \(error.localizedDescription)"))
             print("Failed to deactivate audio session: \(error.localizedDescription)")
         }
     }
     
     func processVoiceInput() {
-        log.append("Processing voice input...")
+        log.append((UUID().uuidString, "Processing voice input..."))
         
         Task {
             do {
                 if let response = try await openAIClient.createChatCompletions(
                     model: .gpt4o(.base),
-                    messages: [.init(text: recognizedText, role: .user)],
+                    messages: [.init(text: initialPrompt, role: .system), .init(text: recognizedText, role: .user)],
                     optionalParameters: .init(temperature: 0.5)
                 ) {
                     if let textResponse = response.choices.first?.message.content {
                         DispatchQueue.main.async {
                             self.responseText = textResponse
-                            self.log.append("GPT-4o response: \(self.responseText)")
+                            self.log.append((UUID().uuidString, "GPT-4o response: \(self.responseText)"))
                         }
                         await self.createSpeech(input: textResponse)
                     }
                 }
             } catch {
-                log.append("Error processing voice input: \(error.localizedDescription)")
+                log.append((UUID().uuidString, "Error processing voice input: \(error.localizedDescription)"))
                 print("Error processing voice input: \(error.localizedDescription)")
             }
         }
@@ -137,7 +146,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     
     @MainActor
     func createSpeech(input: String) async {
-        log.append("Creating speech...")
+        log.append((UUID().uuidString, "Creating speech..."))
         isLoadingTextToSpeechAudio = .isLoading
         
         do {
@@ -152,7 +161,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                let data {
                 do {
                     try data.write(to: filePath)
-                    log.append("File created: \(filePath)")
+                    log.append((UUID().uuidString, "File created: \(filePath)"))
                     print("File created: \(filePath)")
                     
                     // Configure audio session for playback
@@ -165,27 +174,60 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                     audioPlayer?.prepareToPlay()
                     audioPlayer?.play()
                     isLoadingTextToSpeechAudio = .finishedLoading
-                    log.append("Audio playback started")
+                    log.append((UUID().uuidString, "Audio playback started"))
                 } catch {
-                    log.append("Error initializing audio player: \(error.localizedDescription)")
+                    log.append((UUID().uuidString, "Error initializing audio player: \(error.localizedDescription)"))
                     print("Error initializing audio player: \(error.localizedDescription)")
                 }
             } else {
-                log.append("Error trying to save file in filePath")
+                log.append((UUID().uuidString, "Error trying to save file in filePath"))
                 print("Error trying to save file in filePath")
             }
             
         } catch {
-            log.append("Error creating Audios: \(error.localizedDescription)")
+            log.append((UUID().uuidString, "Error creating Audios: \(error.localizedDescription)"))
             print("Error creating Audios: \(error.localizedDescription)")
         }
+    }
+    
+    func getCurrentTimestamp() -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.string(from: Date())
     }
 }
 
 extension VoiceInteractionViewModel: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         isLoadingTextToSpeechAudio = .finishedPlaying
-        log.append("Audio playback finished")
+        log.append((UUID().uuidString, "Audio playback finished"))
         print("Audio playback finished")
+    }
+}
+
+struct Module: Codable {
+    let id: String
+    let name: String
+    let description: String
+}
+
+struct ModulesData: Codable {
+    let sensingModules: [Module]
+    let feedbackModules: [Module]
+}
+
+func loadModulesData() -> ModulesData? {
+    guard let url = Bundle.main.url(forResource: "modules", withExtension: "json") else {
+        print("JSON file not found")
+        return nil
+    }
+    
+    do {
+        let data = try Data(contentsOf: url)
+        let modulesData = try JSONDecoder().decode(ModulesData.self, from: data)
+        return modulesData
+    } catch {
+        print("Error loading JSON data: \(error)")
+        return nil
     }
 }

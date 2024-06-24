@@ -42,6 +42,7 @@
 		F4EAB7C82BF7F48800ECA18F /* VariationImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4EAB7C72BF7F48800ECA18F /* VariationImageViewModel.swift */; };
 		FC5388512C26D8F40008EA9D /* VoiceInteractionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5388502C26D8F40008EA9D /* VoiceInteractionViewModel.swift */; };
 		FC5388532C26D91E0008EA9D /* VoiceInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */; };
+		FC5388562C29281B0008EA9D /* modules.json in Resources */ = {isa = PBXBuildFile; fileRef = FC5388552C29281B0008EA9D /* modules.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +83,7 @@
 		FC5388502C26D8F40008EA9D /* VoiceInteractionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInteractionViewModel.swift; sourceTree = "<group>"; };
 		FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInteractionView.swift; sourceTree = "<group>"; };
 		FC5388542C26DC8C0008EA9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		FC5388552C29281B0008EA9D /* modules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = modules.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +125,7 @@
 		F442DCF52B80A2B20032682E /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				FC5388552C29281B0008EA9D /* modules.json */,
 				FC5388542C26DC8C0008EA9D /* Info.plist */,
 				FC53884F2C26D8B10008EA9D /* Voice Interaction */,
 				F442DCF62B80A2B20032682E /* DemoApp.swift */,
@@ -376,6 +379,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F442DD1B2B80A5990032682E /* SwiftOpenAI.plist in Resources */,
+				FC5388562C29281B0008EA9D /* modules.json in Resources */,
 				F442DCFE2B80A2B30032682E /* Preview Assets.xcassets in Resources */,
 				F442DCFB2B80A2B30032682E /* Assets.xcassets in Resources */,
 			);

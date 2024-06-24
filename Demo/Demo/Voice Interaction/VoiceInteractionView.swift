@@ -61,8 +61,8 @@ struct VoiceInteractionView: View {
                     .padding(.bottom, 10)
                 
                 ScrollView {
-                    ForEach(viewModel.log, id: \.self) { logEntry in
-                        Text(logEntry)
+                    ForEach(viewModel.log, id: \.0) { logEntry in
+                        Text("\(logEntry.1)")
                             .padding(.vertical, 2)
                             .foregroundColor(.gray)
                     }
