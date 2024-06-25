@@ -135,26 +135,26 @@ struct ContentView: View {
                         }
                     }
                 }
-                NavigationLink {
-                    CreateTranslationView(viewModel: $createTranslationViewModel)
-                        .navigationBarTitleDisplayMode(.large)
-                        .navigationTitle("Translate Audio")
-                } label: {
-                    HStack {
-                        Image(systemName: "quote.bubble")
-                            .foregroundStyle(.white)
-                            .frame(width: 40, height: 40)
-                            .padding(4)
-                            .background(.cyan.gradient)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                        VStack(alignment: .leading) {
-                            Text("Translate Audio into English")
-                                .font(.system(size: 18))
-                                .bold()
-                            Text("Learn how to translate speech into English")
-                        }
-                    }
-                }
+//                NavigationLink {
+//                    CreateTranslationView(viewModel: $createTranslationViewModel)
+//                        .navigationBarTitleDisplayMode(.large)
+//                        .navigationTitle("Translate Audio")
+//                } label: {
+//                    HStack {
+//                        Image(systemName: "quote.bubble")
+//                            .foregroundStyle(.white)
+//                            .frame(width: 40, height: 40)
+//                            .padding(4)
+//                            .background(.cyan.gradient)
+//                            .clipShape(RoundedRectangle(cornerRadius: 10))
+//                        VStack(alignment: .leading) {
+//                            Text("Translate Audio into English")
+//                                .font(.system(size: 18))
+//                                .bold()
+//                            Text("Learn how to translate speech into English")
+//                        }
+//                    }
+//                }
                 NavigationLink {
                     VisionView(viewModel: visionViewModel)
                         .navigationBarTitleDisplayMode(.large)

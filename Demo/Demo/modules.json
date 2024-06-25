@@ -7,8 +7,8 @@
       },
       {
         "id": "2",
-        "name": "Proximity Sensor",
-        "description": "Detects the presence of nearby objects."
+        "name": "Motion Sensor",
+        "description": "Detects the presence of motion."
       }
     ],
     "feedbackModules": [

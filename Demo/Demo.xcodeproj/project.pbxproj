@@ -43,6 +43,7 @@
 		FC5388512C26D8F40008EA9D /* VoiceInteractionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5388502C26D8F40008EA9D /* VoiceInteractionViewModel.swift */; };
 		FC5388532C26D91E0008EA9D /* VoiceInteractionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */; };
 		FC5388562C29281B0008EA9D /* modules.json in Resources */ = {isa = PBXBuildFile; fileRef = FC5388552C29281B0008EA9D /* modules.json */; };
+		FC5388582C29B7F00008EA9D /* DevLog.md in Resources */ = {isa = PBXBuildFile; fileRef = FC5388572C29B7F00008EA9D /* DevLog.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +85,7 @@
 		FC5388522C26D91E0008EA9D /* VoiceInteractionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceInteractionView.swift; sourceTree = "<group>"; };
 		FC5388542C26DC8C0008EA9D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		FC5388552C29281B0008EA9D /* modules.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = modules.json; sourceTree = "<group>"; };
+		FC5388572C29B7F00008EA9D /* DevLog.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = DevLog.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 		F442DCF52B80A2B20032682E /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				FC5388572C29B7F00008EA9D /* DevLog.md */,
 				FC5388552C29281B0008EA9D /* modules.json */,
 				FC5388542C26DC8C0008EA9D /* Info.plist */,
 				FC53884F2C26D8B10008EA9D /* Voice Interaction */,
@@ -381,6 +384,7 @@
 				F442DD1B2B80A5990032682E /* SwiftOpenAI.plist in Resources */,
 				FC5388562C29281B0008EA9D /* modules.json in Resources */,
 				F442DCFE2B80A2B30032682E /* Preview Assets.xcassets in Resources */,
+				FC5388582C29B7F00008EA9D /* DevLog.md in Resources */,
 				F442DCFB2B80A2B30032682E /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

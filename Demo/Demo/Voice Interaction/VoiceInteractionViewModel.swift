@@ -43,7 +43,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     
     static func createInitialPrompt(with modulesData: ModulesData?) -> String {
         var prompt = """
-        You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules.
+        You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules. For those sensing & feedback modules, you should only offer information in the JSON file but not offer any other information that you learn.
         """
         if let modulesData = modulesData {
             let sensingModules = modulesData.sensingModules.map { "\($0.name): \($0.description)" }.joined(separator: ", ")
