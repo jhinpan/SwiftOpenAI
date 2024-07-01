@@ -1,26 +1,80 @@
 {
     "sensingModules": [
-      {
-        "id": "1",
-        "name": "Temperature Sensor",
-        "description": "Measures the ambient temperature."
-      },
-      {
-        "id": "2",
-        "name": "Motion Sensor",
-        "description": "Detects the presence of motion."
-      }
+        {
+            "name": "Temperature",
+            "dataFormat": "Int",
+            "parameterSetting": "Target Temperature Setting, Changing Trend",
+            "description": "Measures the ambient temperature, can be used in digital cooking aids or HVAC System"
+        },
+        {
+            "name": "Motion",
+            "dataFormat": "Boolean",
+            "parameterSetting": "Motion Sensing Switch",
+            "description": "Detects the presence of motion, can be used in home security systems or to check presence of objects"
+        },
+        {
+            "name": "IMU",
+            "dataFormat": "Array",
+            "parameterSetting": "Sensitivity, data update frequency, Acceleration, Gesture, Posture",
+            "description": "Can be usually used in Fall Detection, Orientation Change Alerts, Activity Recognition, Gesture Control"
+        },
+        {
+            "name": "Camera",
+            "dataFormat": "Images",
+            "parameterSetting": "Frequency of subsequent images, Image Quality Settings",
+            "description": "Can be used in scenarios like Person Detection, Object detection and tracking, Security Monitoring"
+        },
+        {
+            "name": "Light",
+            "dataFormat": "Int",
+            "parameterSetting": "target light intensity, light intensity change",
+            "description": "Room occupancy monitoring,"
+        },
+        {
+            "name": "Distance",
+            "dataFormat": "Float",
+            "parameterSetting": "target distance value",
+            "description": "Potential Scenario like waiting in line, or keep something in a certain distance from a household member(e.g. keep the cables away from the kid)"
+        }
     ],
     "feedbackModules": [
-      {
-        "id": "1",
-        "name": "Vibration Motor",
-        "description": "Provides haptic feedback."
-      },
-      {
-        "id": "2",
-        "name": "LED Light",
-        "description": "Provides visual feedback."
-      }
+        {
+            "name": "Vibration",
+            "dataFormat": "PWM control signal",
+            "parameterSetting": "Vibration Pattern Setting",
+            "description": "Provides haptic feedback."
+        },
+        {
+            "name": "LEDMatrix",
+            "dataFormat": "LED Control signal",
+            "parameterSetting": "colors, patterns, blinking",
+            "description": "Provides visual feedback."
+        },
+        {
+            "name": "Speaker",
+            "dataFormat": "WAV file",
+            "parameterSetting": "variable of speaking",
+            "description": "A quick audio notification to show the speaker is working, also help better debugging"
+        },
+        {
+            "name": "TactileMatrix",
+            "dataFormat": "PWM control signal",
+            "parameterSetting": "moving or not, strength and speed of the actuation",
+            "description": "Enhances user interaction through tactile feedback"
+        },
+        {
+            "name": "Buzzer",
+            "dataFormat": "PWM control signal",
+            "parameterSetting": "frequency, pitch",
+            "description": "Emits audio signals at different frequencies and pitches"
+        }
+    ],
+    "phoneEndModules": [
+        {
+            "name": "Timer",
+            "dataFormat": "Int",
+            "parameterSetting": "Target Value for Timer",
+            "description": "Set values for timer to notify later"
+        }
     ]
-  }
+}

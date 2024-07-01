@@ -43,13 +43,15 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     
     static func createInitialPrompt(with modulesData: ModulesData?) -> String {
         var prompt = """
-        You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules. For those sensing & feedback modules, you should only offer information in the JSON file but not offer any other information that you learn.
+        You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules. For those sensing & feedback modules, you should only offer information in the JSON file but not offer any other information that you learn. Besides that, we also want you to hide the specific JSON file towards users during interaction.
         """
         if let modulesData = modulesData {
-            let sensingModules = modulesData.sensingModules.map { "\($0.name): \($0.description)" }.joined(separator: ", ")
-            let feedbackModules = modulesData.feedbackModules.map { "\($0.name): \($0.description)" }.joined(separator: ", ")
+            let sensingModules = modulesData.sensingModules.map { "\($0.name): \($0.description), Data Format: \($0.dataFormat), Parameter Setting: \($0.parameterSetting)" }.joined(separator: ", ")
+            let feedbackModules = modulesData.feedbackModules.map { "\($0.name): \($0.description), Data Format: \($0.dataFormat), Parameter Setting: \($0.parameterSetting)" }.joined(separator: ", ")
+            let phoneEndModules = modulesData.phoneEndModules.map { "\($0.name): \($0.description), Data Format: \($0.dataFormat), Parameter Setting: \($0.parameterSetting)" }.joined(separator: ", ")
             prompt += "\nSensing Modules: \(sensingModules)"
             prompt += "\nFeedback Modules: \(feedbackModules)"
+            prompt += "\nPhone End Modules: \(phoneEndModules)"
         }
         return prompt
     }
@@ -220,14 +222,16 @@ extension VoiceInteractionViewModel: AVAudioPlayerDelegate {
 }
 
 struct Module: Codable {
-    let id: String
     let name: String
+    let dataFormat: String
+    let parameterSetting: String
     let description: String
 }
 
 struct ModulesData: Codable {
     let sensingModules: [Module]
     let feedbackModules: [Module]
+    let phoneEndModules: [Module]
 }
 
 func loadModulesData() -> ModulesData? {
