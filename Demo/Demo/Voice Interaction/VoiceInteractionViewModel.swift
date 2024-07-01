@@ -9,6 +9,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     @Published var isLoadingTextToSpeechAudio: TextToSpeechType = .noExecuted
     @Published var isListening: Bool = false
     @Published var log: [(String, String)] = []
+    @Published var connections: [Connection] = []
     
     private let openAIClient = SwiftOpenAI(apiKey: Bundle.main.getOpenAIApiKey()!)
     private let speechRecognizer = SFSpeechRecognizer()
@@ -44,6 +45,17 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
     static func createInitialPrompt(with modulesData: ModulesData?) -> String {
         var prompt = """
         You are A11ybits Manager, an assistant knowledgeable about all sensing modules and feedback modules. You can provide detailed information on various modules and how to use them. You also have access to a JSON file that contains data about these modules. For those sensing & feedback modules, you should only offer information in the JSON file but not offer any other information that you learn. Besides that, we also want you to hide the specific JSON file towards users during interaction.
+        
+        You should recognize commands to connect among those sensing modules, feedback modules, phone-end modules and set parameters toward those specific modules. For example:
+        - "Connect Temperature sensor with Speaker."
+        - "I want to connect the Motion sensor with the vibration feedback module."
+        - "Build connection between Light sensor and LEDMatrix."
+        - "Set temperature to 75 degrees."
+        
+        Debugging Tips:
+        - If you encounter any issues, please describe the problem in detail.
+        - Make sure to check that the JSON file is correctly formatted and all required fields are present.
+        - If the microphone is not working, ensure it has the necessary permissions.
         """
         if let modulesData = modulesData {
             let sensingModules = modulesData.sensingModules.map { "\($0.name): \($0.description), Data Format: \($0.dataFormat), Parameter Setting: \($0.parameterSetting)" }.joined(separator: ", ")
@@ -149,6 +161,7 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
                         DispatchQueue.main.async {
                             self.responseText = textResponse
                             self.log.append((UUID().uuidString, "GPT-4o response: \(self.responseText)"))
+                            self.handleVoiceCommand(text: self.responseText)
                         }
                         await self.createSpeech(input: textResponse)
                     }
@@ -206,10 +219,68 @@ class VoiceInteractionViewModel: NSObject, ObservableObject {
         }
     }
     
-    func getCurrentTimestamp() -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter.string(from: Date())
+    func handleVoiceCommand(text: String) {
+        // Parse the text to identify commands for connecting modules and setting parameters
+        if text.lowercased().contains("connect") || text.lowercased().contains("build connection") {
+            // Extract module names
+            let components = text.split(separator: " ")
+            let sensingModulesNames = modulesData?.sensingModules.map { $0.name.lowercased() } ?? []
+            let feedbackModulesNames = modulesData?.feedbackModules.map { $0.name.lowercased() } ?? []
+            
+            let sensingModuleName = components.first(where: { sensingModulesNames.contains($0.lowercased()) })
+            let feedbackModuleName = components.first(where: { feedbackModulesNames.contains($0.lowercased()) })
+            
+            if let sensingModuleName = sensingModuleName, let feedbackModuleName = feedbackModuleName,
+               let sensingModule = modulesData?.sensingModules.first(where: { $0.name.lowercased() == sensingModuleName.lowercased() }),
+               let feedbackModule = modulesData?.feedbackModules.first(where: { $0.name.lowercased() == feedbackModuleName.lowercased() }) {
+                
+                var connection = Connection(sensingModule: sensingModule, feedbackModule: feedbackModule, parameter: "", threshold: "")
+                connections.append(connection)
+                log.append((UUID().uuidString, "Connected \(sensingModule.name) to \(feedbackModule.name)"))
+                provideAudioFeedback(message: "Connected \(sensingModule.name) to \(feedbackModule.name)")
+            } else {
+                log.append((UUID().uuidString, "Failed to connect modules: modules not found"))
+                provideAudioFeedback(message: "Failed to connect modules: modules not found")
+            }
+        } else if text.lowercased().contains("set") {
+            // Extract module name, parameter, and value
+            let components = text.split(separator: " ")
+            let moduleName = components.first(where: { name in
+                modulesData?.sensingModules.contains(where: { $0.name.lowercased() == name.lowercased() }) ?? false ||
+                modulesData?.feedbackModules.contains(where: { $0.name.lowercased() == name.lowercased() }) ?? false
+            })
+            let parameter = components.first(where: { $0.lowercased() == "temperature" }) ?? ""
+            let value = components.last ?? ""
+            
+            if let moduleName = moduleName,
+               let index = connections.firstIndex(where: { $0.sensingModule.name.lowercased() == moduleName.lowercased() || $0.feedbackModule.name.lowercased() == moduleName.lowercased() }) {
+                connections[index].parameter = String(parameter)
+                connections[index].threshold = String(value)
+                log.append((UUID().uuidString, "Set \(parameter) to \(value) for module \(moduleName)"))
+                provideAudioFeedback(message: "Set \(parameter) to \(value) for module \(moduleName)")
+            } else {
+                log.append((UUID().uuidString, "Failed to set parameter: connection not found"))
+                provideAudioFeedback(message: "Failed to set parameter: connection not found")
+            }
+        }
+        
+        // Print all connections for debugging purposes
+        printConnections()
+    }
+    
+    func provideAudioFeedback(message: String) {
+        let utterance = AVSpeechUtterance(string: message)
+        utterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+        let synthesizer = AVSpeechSynthesizer()
+        synthesizer.speak(utterance)
+    }
+    
+    func printConnections() {
+        log.append((UUID().uuidString, "Current connections:"))
+        for connection in connections {
+            log.append((UUID().uuidString, "Sensing Module: \(connection.sensingModule.name), Feedback Module: \(connection.feedbackModule.name), Parameter: \(connection.parameter), Threshold: \(connection.threshold)"))
+            print("Sensing Module: \(connection.sensingModule.name), Feedback Module: \(connection.feedbackModule.name), Parameter: \(connection.parameter), Threshold: \(connection.threshold)")
+        }
     }
 }
 
@@ -226,6 +297,13 @@ struct Module: Codable {
     let dataFormat: String
     let parameterSetting: String
     let description: String
+}
+
+struct Connection: Codable {
+    let sensingModule: Module
+    let feedbackModule: Module
+    var parameter: String
+    var threshold: String // Changed to String for simplicity
 }
 
 struct ModulesData: Codable {
